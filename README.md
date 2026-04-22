@@ -1,6 +1,6 @@
 # 🌐 My Website
 
-🔗 Live Demo: https://yourusername.github.io/my-website/
+🔗 Live Demo: https://yourusername.github.io/my-website/](https://faiz25md.github.io/Forge-Workout-track/
 
 ## 📌 About
 Workout Tracker is a responsive fitness web application designed to help users manage and track their workout routines efficiently. The app provides a structured approach to planning workouts, enabling users to follow split routines and stay consistent with their fitness goals.
