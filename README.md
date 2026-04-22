@@ -13,6 +13,6 @@ This is a simple website project built using HTML, CSS, and JavaScript.
 - JavaScript
 
 ## 📂 Project Structure
-index.html
-style.css
-script.js
+- index.html
+- style.css
+- script.js
