@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FORGE — Workout Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="logo">
+    <div class="logo-text"><span class="logo-dot"></span><span>FORGE</span></div>
+    <div class="logo-sub">Workout Tracker</div>
+  </div>
+  <nav class="nav">
+    <div class="nav-section">Main</div>
+    <div class="nav-item active" id="nav-dashboard" onclick="showPage('dashboard', this)">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      <span>Dashboard</span>
+    </div>
+    <div class="nav-item" id="nav-today" onclick="showPage('today', this)">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13,2 3,14 12,14 11,22 21,10 12,10"/></svg>
+      <span>Today's Workout</span>
+      <span class="nav-badge" id="nav-day-badge">DAY 1</span>
+    </div>
+    <div class="nav-section">Track</div>
+    <div class="nav-item" id="nav-history" onclick="showPage('history', this)">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"/><polyline points="12 7 12 12 15 15"/></svg>
+      <span>History</span>
+    </div>
+    <div class="nav-item" id="nav-progress" onclick="showPage('progress', this)">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/></svg>
+      <span>Progress</span>
+    </div>
+    <div class="nav-section">More</div>
+    <div class="nav-item" id="nav-plan" onclick="showPage('plan', this)">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      <span>My Plan</span>
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="user-card">
+      <div class="avatar">A</div>
+      <div>
+        <div class="user-name">Athlete</div>
+        <div class="user-plan">PPL Split</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-title" id="page-title">DASHBOARD</div>
+    <div class="topbar-right">
+      <div class="streak-pill">🦁<span id="streak-count">0</span> Day Streak</div>
+    </div>
+  </div>
+
+  <!-- ═══════════ DASHBOARD PAGE ═══════════ -->
+  <div class="page active" id="page-dashboard">
+    <div class="stats-grid">
+      <div class="stat-card red animate-in">
+        <div class="stat-label">Workouts This Week</div>
+        <div class="stat-value" id="stat-workouts">0</div>
+        <div class="stat-change up">Rock this week</div>
+      </div>
+      <div class="stat-card gold animate-in">
+        <div class="stat-label">Total Volume (kg)</div>
+        <div class="stat-value" id="stat-volume">0.0</div>
+        <div class="stat-change up">You gotta keep it light this week</div>
+      </div>
+      <div class="stat-card green animate-in">
+        <div class="stat-label">Sets Completed</div>
+        <div class="stat-value" id="stat-sets">0</div>
+        <div class="stat-change up">Go for higher sets</div>
+      </div>
+      <div class="stat-card blue animate-in">
+        <div class="stat-label">Avg Session (min)</div>
+        <div class="stat-value">90</div>
+        <div class="stat-change down">Don't forget to add rest gaps</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">This Week's Schedule</div>
+        <div class="week-row" id="week-schedule-row">
+          <!-- built by JS so active day is highlighted correctly -->
+        </div>
+        <div style="margin-top:16px; font-size:13px; color:var(--muted)" id="today-summary"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Weekly Volume by Muscle</div>
+        <div class="bar-chart" id="volume-chart"></div>
+        <div style="display:flex; gap:6px; margin-top:10px; flex-wrap:wrap;">
+          <span class="muscle-tag chest">Chest</span>
+          <span class="muscle-tag back">Back</span>
+          <span class="muscle-tag legs">Legs</span>
+          <span class="muscle-tag arms">Arms</span>
+          <span class="muscle-tag shoulders">Shoulders</span>
+          <span class="muscle-tag core">Core</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-title">Personal Records</div>
+        <div class="progress-item">
+          <div class="progress-header"><span>Bench Press</span><span style="font-family:'DM Mono';font-size:13px;color:var(--gold)">105 kg</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:80%;background:linear-gradient(90deg,var(--accent),var(--accent2))"></div></div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-header"><span>Squat</span><span style="font-family:'DM Mono';font-size:13px;color:var(--gold)">120 kg</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:72%;background:linear-gradient(90deg,var(--purple),#C084FC)"></div></div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-header"><span>Deadlift</span><span style="font-family:'DM Mono';font-size:13px;color:var(--gold)">200 kg</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:90%;background:linear-gradient(90deg,var(--blue),#60A5FA)"></div></div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-header"><span>OHP</span><span style="font-family:'DM Mono';font-size:13px;color:var(--gold)">70 kg</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:56%;background:linear-gradient(90deg,var(--gold),#FDE68A)"></div></div>
+        </div>
+      </div>
+
+      <div class="card" style="grid-column:span 2">
+        <div class="card-title">Recent Activity</div>
+        <div id="dashboard-recent-activity"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ TODAY'S WORKOUT PAGE ═══════════ -->
+  <div class="page" id="page-today">
+
+    <!-- DAY SELECTOR TABS -->
+    <div class="day-selector" id="day-selector"></div>
+
+    <!-- DAY HEADER (dynamic) -->
+    <div class="day-header">
+      <div>
+        <div class="day-label" id="today-day-label">CHEST + BACK</div>
+        <div><span class="day-badge" id="today-day-badge">Day 5 — Volume Day</span></div>
+        <div style="margin-top:10px;font-size:13px;color:var(--muted)" id="today-day-meta">6 exercises · Est. 60–70 min</div>
+      </div>
+      <div style="text-align:right">
+        <div class="timer-display" id="timer">00:00</div>
+        <div class="timer-label">Session Timer</div>
+        <div style="display:flex;gap:8px;margin-top:10px;justify-content:flex-end">
+          <button class="start-btn" id="timer-btn" onclick="toggleTimer()">▶ START</button>
+          <button class="btn-secondary" style="padding:12px 20px;border-radius:12px" onclick="document.getElementById('finishModal').classList.add('open')">Finish</button>
+          <button class="btn-secondary" style="padding:12px 20px;border-radius:12px" onclick="resetAll()">Reset</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- WORKOUT PROGRESS -->
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin-bottom:24px;display:flex;align-items:center;gap:20px;">
+      <div style="flex:1">
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px;font-size:13px;color:var(--muted)">
+          <span>Progress</span><span id="progress-text">0 / 0 exercises</span>
+        </div>
+        <div class="progress-bar" style="height:8px">
+          <div class="progress-fill" id="workout-progress" style="width:0%;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width 0.5s"></div>
+        </div>
+      </div>
+      <div style="text-align:center;min-width:80px">
+        <div style="font-family:'DM Mono';font-size:20px;font-weight:600" id="vol-display">0</div>
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">kg lifted</div>
+      </div>
+    </div>
+
+    <!-- EXERCISE LIST (built dynamically) -->
+    <div id="exercise-list"></div>
+  </div>
+
+  <!-- ═══════════ HISTORY PAGE ═══════════ -->
+  <div class="page" id="page-history">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
+      <div style="font-size:13px;color:var(--muted)" id="history-count">Total: 0 sessions logged</div>
+      <div style="display:flex;gap:8px">
+        <select id="history-filter" class="set-input" style="width:auto;padding:8px 14px;border-radius:10px;cursor:pointer" onchange="renderHistory()">
+          <option value="all">All Days</option>
+          <option value="PUSH">Push</option>
+          <option value="PULL">Pull</option>
+          <option value="LEGS">Legs</option>
+          <option value="CHEST + BACK">Chest+Back</option>
+          <option value="SHOULDERS + ARMS">Shoulders+Arms</option>
+        </select>
+      </div>
+    </div>
+    <div id="history-list"></div>
+    <div id="history-empty" style="display:none;text-align:center;padding:60px 20px;color:var(--muted)">
+      <div style="font-family:'Bebas Neue';font-size:32px;letter-spacing:2px;margin-bottom:8px">No sessions yet</div>
+      <div style="font-size:14px">Complete a workout and save it to see it here.</div>
+    </div>
+  </div>
+
+  <!-- ═══════════ PROGRESS PAGE ═══════════ -->
+  <div class="page" id="page-progress">
+    <div class="grid-2" style="margin-bottom:20px">
+      <div class="card">
+        <div class="card-title">Weekly Volume Trend (kg)</div>
+        <div class="chart-area">
+          <svg class="chart-svg" id="trend-chart" viewBox="0 0 400 140" preserveAspectRatio="none"></svg>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Strength Progress — Bench Press (kg)</div>
+        <div class="chart-area">
+          <svg class="chart-svg" id="bench-chart" viewBox="0 0 400 140" preserveAspectRatio="none"></svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-title">Personal Records</div>
+      <div class="pr-grid">
+        <div class="pr-card"><div class="pr-icon" style="background:rgba(255,60,60,0.12)">🏋️</div><div><div class="pr-val" style="color:var(--accent)">100 kg</div><div class="pr-exercise">Bench Press</div><span class="pr-badge">↑ +5kg this month</span></div></div>
+        <div class="pr-card"><div class="pr-icon" style="background:rgba(168,85,247,0.12)">🦵</div><div><div class="pr-val" style="color:var(--purple)">120 kg</div><div class="pr-exercise">Back Squat</div><span class="pr-badge">↑ +7.5kg this month</span></div></div>
+        <div class="pr-card"><div class="pr-icon" style="background:rgba(59,130,246,0.12)">💪</div><div><div class="pr-val" style="color:var(--blue)">200 kg</div><div class="pr-exercise">Deadlift</div><span class="pr-badge">↑ +10kg this month</span></div></div>
+        <div class="pr-card"><div class="pr-icon" style="background:rgba(245,166,35,0.12)">🎯</div><div><div class="pr-val" style="color:var(--gold)">70 kg</div><div class="pr-exercise">Overhead Press</div><span class="pr-badge">↑ +2.5kg this month</span></div></div>
+        <div class="pr-card"><div class="pr-icon" style="background:rgba(34,197,94,0.12)">🔗</div><div><div class="pr-val" style="color:var(--green)">42 kg</div><div class="pr-exercise">Barbell Curl</div><span class="pr-badge">↑ +2kg this month</span></div></div>
+        <div class="pr-card"><div class="pr-icon" style="background:rgba(255,107,53,0.12)">🏃</div><div><div class="pr-val" style="color:var(--accent2)">90 kg</div><div class="pr-exercise">Hip Thrust</div><span class="pr-badge">↑ +5kg this month</span></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Body Stats</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
+        <div class="body-stat-card"><div style="font-family:'Bebas Neue';font-size:32px;color:var(--accent)">78</div><div class="body-stat-label">Weight (kg)</div></div>
+        <div class="body-stat-card"><div style="font-family:'Bebas Neue';font-size:32px;color:var(--blue)">16%</div><div class="body-stat-label">Body Fat</div></div>
+        <div class="body-stat-card"><div style="font-family:'Bebas Neue';font-size:32px;color:var(--green)">65.5</div><div class="body-stat-label">Lean Mass (kg)</div></div>
+        <div class="body-stat-card"><div style="font-family:'Bebas Neue';font-size:32px;color:var(--gold)">5'10"</div><div class="body-stat-label">Height</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ PLAN PAGE ═══════════ -->
+  <div class="page" id="page-plan">
+    <div style="margin-bottom:24px;display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap">
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:20px;flex:1;min-width:200px">
+        <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px">Split Type</div>
+        <div style="font-family:'Bebas Neue';font-size:28px;letter-spacing:2px">PPL + Specialisation</div>
+        <div style="font-size:13px;color:var(--muted);margin-top:4px">Push · Pull · Legs · Rest · Chest+Back · Shoulders+Arms</div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:20px;min-width:140px;text-align:center">
+        <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px">Goal</div>
+        <div style="font-family:'Bebas Neue';font-size:24px;color:var(--accent)">HYPERTROPHY</div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:20px;min-width:140px;text-align:center">
+        <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px">Level</div>
+        <div style="font-family:'Bebas Neue';font-size:24px;color:var(--gold)">INTERMEDIATE</div>
+      </div>
+    </div>
+    <div id="plan-days"></div>
+  </div>
+</div>
+
+<!-- FINISH MODAL -->
+<div class="modal-overlay" id="finishModal">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('finishModal').classList.remove('open')">✕</button>
+    <div class="modal-title">🎉 FINISH WORKOUT</div>
+    <div style="font-size:14px;color:var(--muted);margin-bottom:20px">Nice work! Here's your session summary:</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px">
+      <div style="background:var(--bg3);border-radius:12px;padding:14px;text-align:center">
+        <div style="font-family:'Bebas Neue';font-size:32px;color:var(--accent)" id="modal-time">00:00</div>
+        <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">Duration</div>
+      </div>
+      <div style="background:var(--bg3);border-radius:12px;padding:14px;text-align:center">
+        <div style="font-family:'Bebas Neue';font-size:32px;color:var(--gold)" id="modal-vol">0</div>
+        <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">Total Volume (kg)</div>
+      </div>
+    </div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:6px">Notes (optional)</div>
+    <textarea id="workout-notes" class="set-input" style="width:100%;height:80px;resize:none;text-align:left;padding:10px 14px;font-family:'DM Sans'" placeholder="How did it feel? Any PRs?"></textarea>
+    <div class="btn-row">
+      <button class="btn-secondary" onclick="document.getElementById('finishModal').classList.remove('open')">Keep Going</button>
+      <button class="btn-primary" onclick="saveWorkout()">Save Workout ✓</button>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
